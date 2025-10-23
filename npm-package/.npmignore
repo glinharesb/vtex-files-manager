@@ -1,0 +1,29 @@
+# Temporary files
+.tmp/
+*.tmp
+*.log
+
+# Development files
+.git/
+.github/
+.vscode/
+.idea/
+
+# Test files
+test/
+tests/
+*.test.js
+
+# Documentation (main repo has full docs)
+docs/
+
+# Build artifacts (we download from releases)
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules (will be installed by users)
+node_modules/
