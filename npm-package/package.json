@@ -1,0 +1,47 @@
+{
+  "name": "vtex-files-manager",
+  "version": "0.0.0-development",
+  "description": "A powerful CLI tool for uploading images and files to VTEX",
+  "main": "install.js",
+  "bin": {
+    "vfm": "./bin/vfm.js"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "keywords": [
+    "vtex",
+    "upload",
+    "files",
+    "images",
+    "cli",
+    "tool",
+    "graphql",
+    "cms"
+  ],
+  "author": "Gabriel Linhares Bernardes",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/glinharesb/vtex-files-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/glinharesb/vtex-files-manager/issues"
+  },
+  "homepage": "https://github.com/glinharesb/vtex-files-manager#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
+  "dependencies": {
+    "tar": "^6.2.0"
+  }
+}

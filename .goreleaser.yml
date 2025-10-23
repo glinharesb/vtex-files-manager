@@ -1,0 +1,143 @@
+# GoReleaser configuration for VTEX Files Manager
+# Generates builds for multiple platforms with both full and short command names
+
+version: 2
+
+before:
+  hooks:
+    # Tidy up dependencies
+    - go mod tidy
+    # Run tests
+    - go test ./...
+
+builds:
+  - id: vfm
+    binary: vfm
+    main: ./main.go
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    # Ignore unsupported combinations
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+    flags:
+      - -trimpath
+
+archives:
+  - id: default
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    formats:
+      - tar.gz
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: 'checksums.txt'
+  algorithm: sha256
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^ci:'
+      - '^chore:'
+      - '^style:'
+      - 'Merge pull request'
+      - 'Merge remote-tracking branch'
+      - 'Merge branch'
+  groups:
+    - title: 'New Features'
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: 'Bug Fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 1
+    - title: 'Performance Improvements'
+      regexp: "^.*perf[(\\w)]*:+.*$"
+      order: 2
+    - title: 'Documentation'
+      regexp: "^.*docs[(\\w)]*:+.*$"
+      order: 3
+    - title: 'Other Changes'
+      order: 999
+
+release:
+  github:
+    owner: glinharesb
+    name: vtex-files-manager
+  draft: false
+  prerelease: auto
+  mode: replace
+  header: |
+    ## VTEX Files Manager {{ .Tag }}
+
+    Upload files and images to VTEX easily using the `vfm` command!
+
+    ### Installation
+
+    #### npm (Recommended)
+    ```bash
+    npm install -g vtex-files-manager
+    ```
+
+    #### Direct Download
+    Download the appropriate binary for your system below and add it to PATH.
+
+    ### Quick Usage
+    ```bash
+    # Single upload
+    vfm upload image.jpg -m cms
+
+    # Batch upload
+    vfm batch ./images -m graphql
+
+    # View logs
+    vfm logs
+
+    # Update
+    vfm update
+
+    # Help
+    vfm --help
+    ```
+
+    **Requirements**: VTEX CLI installed and `vtex login` done.
+  footer: |
+    ---
+
+    **Full Documentation**: https://github.com/glinharesb/vtex-files-manager
+
+    **Issues?** Open an issue: https://github.com/glinharesb/vtex-files-manager/issues
+
+# Announce release (optional - requires configuration)
+# announce:
+#   twitter:
+#     enabled: true
+#     message_template: 'VTEX Files Manager {{ .Tag }} is out! Check it out at {{ .ReleaseURL }}'
